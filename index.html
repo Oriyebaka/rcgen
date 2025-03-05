@@ -21,222 +21,281 @@
     </script>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex">
-                    <div class="flex-shrink-0 flex items-center">
-                        <img class="h-8 w-auto" src="https://www1.bac-assets.com/homepage/spa-assets/images/assets-images-global-logos-bac-logo-v2-CSX3648cbbb.svg" alt="Bank of America">
-                    </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="#" class="border-boa-red text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Wire Transfer
-                        </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Accounts
-                        </a>
-                        <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Investments
-                        </a>
-                    </div>
-                </div>
-                <div class="hidden sm:ml-6 sm:flex sm:items-center">
-                    <button class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-boa-red">
-                        <span class="sr-only">View notifications</span>
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                        </svg>
-                    </button>
-                    <div class="ml-3 relative">
-                        <div>
-                            <button type="button" class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-boa-red" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                                <span class="sr-only">Open user menu</span>
-                                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Passcode Modal -->
+    <div id="passcodeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full">
+            <img src="https://www1.bac-assets.com/homepage/spa-assets/images/assets-images-global-logos-bac-logo-v2-CSX3648cbbb.svg" alt="Bank of America" class="h-8 mx-auto mb-6">
+            <h2 class="text-2xl font-bold mb-4 text-center">Enter Passcode</h2>
+            <p class="mb-4 text-gray-600 text-center">Please enter your passcode to access the wire transfer system.</p>
+            <input type="password" id="passcodeInput" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-boa-blue" placeholder="Enter passcode">
+            <button onclick="checkPasscode()" class="mt-4 w-full bg-boa-blue text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-200">
+                Submit
+            </button>
+            <p id="errorMessage" class="mt-2 text-boa-red text-center hidden">Incorrect passcode. Access denied.</p>
         </div>
-    </nav>
+    </div>
 
-    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div class="md:grid md:grid-cols-3 md:gap-6">
-            <div class="md:col-span-1">
-                <div class="px-4 sm:px-0">
-                    <h3 class="text-lg font-medium leading-6 text-gray-900">Wire Transfer</h3>
-                    <p class="mt-1 text-sm text-gray-600">
-                        Send money securely to another bank account.
-                    </p>
-                    <div class="mt-5 bg-white shadow overflow-hidden sm:rounded-lg">
-                        <div class="px-4 py-5 sm:px-6">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Transfers</h3>
-                        </div>
-                        <div class="px-4 py-5 sm:p-6">
-                            <canvas id="transferChart" width="400" height="200"></canvas>
-                        </div>
-                    </div>
-                    <div class="mt-5 bg-white shadow overflow-hidden sm:rounded-lg">
-                        <div class="px-4 py-5 sm:px-6">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">Exchange Rates</h3>
-                        </div>
-                        <div class="px-4 py-5 sm:p-6">
-                            <div id="exchangeRates" class="grid grid-cols-2 gap-4 text-sm text-gray-600"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-5 md:mt-0 md:col-span-2">
-                <form id="transferForm">
-                    <div class="shadow overflow-hidden sm:rounded-md">
-                        <div class="px-4 py-5 bg-white sm:p-6">
-                            <div class="grid grid-cols-6 gap-6">
-                                <div class="col-span-6 sm:col-span-3">
-                                    <label for="senderName" class="block text-sm font-medium text-gray-700">Sender Name</label>
-                                    <input type="text" name="senderName" id="senderName" autocomplete="given-name" class="mt-1 focus:ring-boa-blue focus:border-boa-blue block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
-                                <div class="col-span-6 sm:col-span-3">
-                                    <label for="senderAccount" class="block text-sm font-medium text-gray-700">Sender Account</label>
-                                    <input type="text" name="senderAccount" id="senderAccount" autocomplete="family-name" class="mt-1 focus:ring-boa-blue focus:border-boa-blue block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
-                                <div class="col-span-6 sm:col-span-3">
-                                    <label for="receiverName" class="block text-sm font-medium text-gray-700">Receiver Name</label>
-                                    <input type="text" name="receiverName" id="receiverName" autocomplete="given-name" class="mt-1 focus:ring-boa-blue focus:border-boa-blue block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
-                                <div class="col-span-6 sm:col-span-3">
-                                    <label for="receiverAccount" class="block text-sm font-medium text-gray-700">Receiver Account</label>
-                                    <input type="text" name="receiverAccount" id="receiverAccount" autocomplete="family-name" class="mt-1 focus:ring-boa-blue focus:border-boa-blue block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
-                                <div class="col-span-6 sm:col-span-3">
-                                    <label for="receiverBank" class="block text-sm font-medium text-gray-700">Receiver Bank</label>
-                                    <input type="text" name="receiverBank" id="receiverBank" autocomplete="organization" class="mt-1 focus:ring-boa-blue focus:border-boa-blue block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
-                                <div class="col-span-6 sm:col-span-3">
-                                    <label for="amount" class="block text-sm font-medium text-gray-700">Amount (USD)</label>
-                                    <div class="mt-1 relative rounded-md shadow-sm">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <span class="text-gray-500 sm:text-sm">$</span>
-                                        </div>
-                                        <input type="text" name="amount" id="amount" class="focus:ring-boa-blue focus:border-boa-blue block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" aria-describedby="price-currency">
-                                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                            <span class="text-gray-500 sm:text-sm" id="price-currency">USD</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-span-6 sm:col-span-3">
-                                    <label for="transferFee" class="block text-sm font-medium text-gray-700">Transfer Fee (USD)</label>
-                                    <div class="mt-1 relative rounded-md shadow-sm">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <span class="text-gray-500 sm:text-sm">$</span>
-                                        </div>
-                                        <input type="text" name="transferFee" id="transferFee" class="focus:ring-boa-blue focus:border-boa-blue block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="30.00" aria-describedby="fee-currency">
-                                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                            <span class="text-gray-500 sm:text-sm" id="fee-currency">USD</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-boa-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-boa-blue">
-                                Process Transfer
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+    <!-- Main Content (Initially Hidden) -->
+    <div id="mainContent" class="hidden">
+        <nav class="bg-white shadow-lg">
+            <!-- Navigation content... -->
+        </nav>
+
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <!-- Main page content... -->
         </div>
     </div>
 
     <script>
-        document.getElementById('transferForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form values
-            const senderName = document.getElementById('senderName').value;
-            const senderAccount = document.getElementById('senderAccount').value;
-            const receiverName = document.getElementById('receiverName').value;
-            const receiverAccount = document.getElementById('receiverAccount').value;
-            const receiverBank = document.getElementById('receiverBank').value;
-            const amount = document.getElementById('amount').value;
-            const transferFee = document.getElementById('transferFee').value || '30.00';
-            
-            // Format amount with commas
-            const formattedAmount = parseFloat(amount).toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-            
-            // Generate confirmation number
-            const confirmationNumber = 'X' + Math.random().toString(36).substring(2, 10).toUpperCase();
-            
-            // Store data in localStorage
-            localStorage.setItem('sender', senderName);
-            localStorage.setItem('senderAccount', senderAccount);
-            localStorage.setItem('receiver', receiverName);
-            localStorage.setItem('receiverAccount', receiverAccount);
-            localStorage.setItem('receiverBank', receiverBank);
-            localStorage.setItem('amount', formattedAmount);
-            localStorage.setItem('processingFee', transferFee);
-            localStorage.setItem('confirmationNumber', confirmationNumber);
-            localStorage.setItem('transactionDate', new Date().toISOString());
-            
-            // Redirect to receipt page
-            window.location.href = 'receipt.html';
-        });
+        function checkPasscode() {
+            const passcode = document.getElementById('passcodeInput').value;
+            if (passcode === '124855') {
+                document.getElementById('passcodeModal').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                loadMainContent();
+            } else {
+                document.getElementById('errorMessage').classList.remove('hidden');
+            }
+        }
 
-        // Chart for recent transfers
-        var ctx = document.getElementById('transferChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Transfer Amount ($)',
-                    data: [1200, 1900, 3000, 5000, 2000, 3000],
-                    borderColor: 'rgb(0, 119, 190)',
-                    backgroundColor: 'rgba(0, 119, 190, 0.1)',
-                    tension: 0.1,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
+        function loadMainContent() {
+            // Here you can load or initialize any content that should only appear after successful authentication
+            // For now, we'll just populate the main content div with the original page content
+            document.getElementById('mainContent').innerHTML = `
+                <nav class="bg-white shadow-lg">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="flex justify-between h-16">
+                            <div class="flex">
+                                <div class="flex-shrink-0 flex items-center">
+                                    <img class="h-8 w-auto" src="https://www1.bac-assets.com/homepage/spa-assets/images/assets-images-global-logos-bac-logo-v2-CSX3648cbbb.svg" alt="Bank of America">
+                                </div>
+                                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                                    <a href="#" class="border-boa-red text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                        Wire Transfer
+                                    </a>
+                                    <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                        Accounts
+                                    </a>
+                                    <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                        Investments
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                                <button class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-boa-red">
+                                    <span class="sr-only">View notifications</span>
+                                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                    </svg>
+                                </button>
+                                <div class="ml-3 relative">
+                                    <div>
+                                        <button type="button" class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-boa-red" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                            <span class="sr-only">Open user menu</span>
+                                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                    <div class="md:grid md:grid-cols-3 md:gap-6">
+                        <div class="md:col-span-1">
+                            <div class="px-4 sm:px-0">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Wire Transfer</h3>
+                                <p class="mt-1 text-sm text-gray-600">
+                                    Send money securely to another bank account.
+                                </p>
+                                <div class="mt-5 bg-white shadow overflow-hidden sm:rounded-lg">
+                                    <div class="px-4 py-5 sm:px-6">
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Transfers</h3>
+                                    </div>
+                                    <div class="px-4 py-5 sm:p-6">
+                                        <canvas id="transferChart" width="400" height="200"></canvas>
+                                    </div>
+                                </div>
+                                <div class="mt-5 bg-white shadow overflow-hidden sm:rounded-lg">
+                                    <div class="px-4 py-5 sm:px-6">
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900">Exchange Rates</h3>
+                                    </div>
+                                    <div class="px-4 py-5 sm:p-6">
+                                        <div id="exchangeRates" class="grid grid-cols-2 gap-4 text-sm text-gray-600"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-5 md:mt-0 md:col-span-2">
+                            <form id="transferForm">
+                                <div class="shadow overflow-hidden sm:rounded-md">
+                                    <div class="px-4 py-5 bg-white sm:p-6">
+                                        <div class="grid grid-cols-6 gap-6">
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="senderName" class="block text-sm font-medium text-gray-700">Sender Name</label>
+                                                <input type="text" name="senderName" id="senderName" autocomplete="given-name" class="mt-1 focus:ring-boa-blue focus:border-boa-blue block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="senderAccount" class="block text-sm font-medium text-gray-700">Sender Account</label>
+                                                <input type="text" name="senderAccount" id="senderAccount" autocomplete="family-name" class="mt-1 focus:ring-boa-blue focus:border-boa-blue block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="receiverName" class="block text-sm font-medium text-gray-700">Receiver Name</label>
+                                                <input type="text" name="receiverName" id="receiverName" autocomplete="given-name" class="mt-1 focus:ring-boa-blue focus:border-boa-blue block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="receiverAccount" class="block text-sm font-medium text-gray-700">Receiver Account</label>
+                                                <input type="text" name="receiverAccount" id="receiverAccount" autocomplete="family-name" class="mt-1 focus:ring-boa-blue focus:border-boa-blue block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="receiverBank" class="block text-sm font-medium text-gray-700">Receiver Bank</label>
+                                                <input type="text" name="receiverBank" id="receiverBank" autocomplete="organization" class="mt-1 focus:ring-boa-blue focus:border-boa-blue block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="amount" class="block text-sm font-medium text-gray-700">Amount (USD)</label>
+                                                <div class="mt-1 relative rounded-md shadow-sm">
+                                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                        <span class="text-gray-500 sm:text-sm">$</span>
+                                                    </div>
+                                                    <input type="text" name="amount" id="amount" class="focus:ring-boa-blue focus:border-boa-blue block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" aria-describedby="price-currency">
+                                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                                        <span class="text-gray-500 sm:text-sm" id="price-currency">USD</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <label for="transferFee" class="block text-sm font-medium text-gray-700">Transfer Fee (USD)</label>
+                                                <div class="mt-1 relative rounded-md shadow-sm">
+                                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                        <span class="text-gray-500 sm:text-sm">$</span>
+                                                    </div>
+                                                    <input type="text" name="transferFee" id="transferFee" class="focus:ring-boa-blue focus:border-boa-blue block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="30.00" aria-describedby="fee-currency">
+                                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                                        <span class="text-gray-500 sm:text-sm" id="fee-currency">USD</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                        <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-boa-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-boa-blue">
+                                            Process Transfer
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Initialize the chart and other dynamic content
+            initializeChart();
+            populateExchangeRates();
+            setupFormSubmission();
+        }
+
+        function initializeChart() {
+            var ctx = document.getElementById('transferChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Transfer Amount ($)',
+                        data: [1200, 1900, 3000, 5000, 2000, 3000],
+                        borderColor: 'rgb(0, 119, 190)',
+                        backgroundColor: 'rgba(0, 119, 190, 0.1)',
+                        tension: 0.1,
+                        fill: true
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value, index, values) {
-                                return '$' + value.toLocaleString();
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return '$' + value.toLocaleString();
+                                }
                             }
                         }
                     }
                 }
+            });
+        }
+
+        function populateExchangeRates() {
+            const exchangeRates = {
+                'EUR': 0.84,
+                'GBP': 0.72,
+                'JPY': 110.14,
+                'CAD': 1.25
+            };
+
+            const exchangeRatesElement = document.getElementById('exchangeRates');
+            for (const [currency, rate] of Object.entries(exchangeRates)) {
+                exchangeRatesElement.innerHTML += `
+                    <div class="flex justify-between items-center">
+                        <span class="font-medium">${currency}</span>
+                        <span>${rate.toFixed(2)}</span>
+                    </div>
+                `;
+            }
+        }
+
+        function setupFormSubmission() {
+            document.getElementById('transferForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const senderName = document.getElementById('senderName').value;
+                const senderAccount = document.getElementById('senderAccount').value;
+                const receiverName = document.getElementById('receiverName').value;
+                const receiverAccount = document.getElementById('receiverAccount').value;
+                const receiverBank = document.getElementById('receiverBank').value;
+                const amount = document.getElementById('amount').value;
+                const transferFee = document.getElementById('transferFee').value || '30.00';
+                
+                // Format amount with commas
+                const formattedAmount = parseFloat(amount).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                
+                // Generate confirmation number
+                const confirmationNumber = 'X' + Math.random().toString(36).substring(2, 10).toUpperCase();
+                
+                // Store data in localStorage
+                localStorage.setItem('sender', senderName);
+                localStorage.setItem('senderAccount', senderAccount);
+                localStorage.setItem('receiver', receiverName);
+                localStorage.setItem('receiverAccount', receiverAccount);
+                localStorage.setItem('receiverBank', receiverBank);
+                localStorage.setItem('amount', formattedAmount);
+                localStorage.setItem('processingFee', transferFee);
+                localStorage.setItem('confirmationNumber', confirmationNumber);
+                localStorage.setItem('transactionDate', new Date().toISOString());
+                
+                // Redirect to receipt page
+                window.location.href = 'receipt.html';
+            });
+        }
+
+        // Add event listener for Enter key on passcode input
+        document.getElementById('passcodeInput').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                checkPasscode();
             }
         });
-
-        // Simulated exchange rates
-        const exchangeRates = {
-            'EUR': 0.84,
-            'GBP': 0.72,
-            'JPY': 110.14,
-            'CAD': 1.25
-        };
-
-        const exchangeRatesElement = document.getElementById('exchangeRates');
-        for (const [currency, rate] of Object.entries(exchangeRates)) {
-            exchangeRatesElement.innerHTML += `
-                <div class="flex justify-between items-center">
-                    <span class="font-medium">${currency}</span>
-                    <span>${rate.toFixed(2)}</span>
-                </div>
-            `;
-        }
     </script>
 </body>
 </html>
+
