@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank of America - Transaction Receipt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'boa-red': '#E31837',
+                        'boa-blue': '#0077BE',
+                        'boa-green': '#2E8540',
+                    },
+                    fontSize: {
+                        'xxs': '0.625rem',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen py-8 px-4">
+    <div class="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Header -->
+        <div class="bg-white border-b border-gray-200 p-3 flex justify-between items-center">
+            <div class="flex-1">
+                <img src="https://www1.bac-assets.com/homepage/spa-assets/images/assets-images-global-logos-bac-logo-v2-CSX3648cbbb.svg" alt="Bank of America" class="h-6">
+            </div>
+            <h2 class="text-base font-semibold flex-1 text-center">Success</h2>
+            <div class="w-5 h-5 rounded-full bg-boa-red flex items-center justify-center flex-shrink-0 ml-auto cursor-pointer" onclick="window.location.href='index.html'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div class="p-4 text-center bg-gray-50">
+            <div class="w-12 h-12 mx-auto bg-boa-green rounded-full flex items-center justify-center mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <h1 class="text-lg font-bold mb-2" id="statusText">Your wire is processing</h1>
+            <button class="text-boa-blue font-semibold uppercase text-xs border-b border-boa-blue">SHARE</button>
+        </div>
+
+        <!-- Transaction Details -->
+        <div class="px-4 pb-4">
+            <!-- Date Information -->
+            <div class="border-b border-gray-200 py-2 grid grid-cols-2">
+                <div class="text-gray-600 text-sm">Date & Time</div>
+                <div class="text-right font-medium text-xs" id="dateTime"></div>
+            </div>
+            <div class="border-b border-gray-200 py-2 grid grid-cols-2">
+                <div class="text-gray-600 text-sm">Confirmation #</div>
+                <div class="text-right font-medium text-sm" id="confirmationNumber"></div>
+            </div>
+            
+            <!-- Sender Information -->
+            <div class="border-b border-gray-200 py-2 grid grid-cols-2">
+                <div class="text-gray-600 text-sm">From</div>
+                <div class="text-right font-medium text-sm" id="sender"></div>
+            </div>
+            <div class="border-b border-gray-200 py-2 grid grid-cols-2">
+                <div class="text-gray-600 text-sm">Sender Account</div>
+                <div class="text-right font-medium text-xs" id="senderAccount"></div>
+            </div>
+            
+            <!-- Recipient Information -->
+            <div class="border-b border-gray-200 py-2 grid grid-cols-2">
+                <div class="text-gray-600 text-sm">To</div>
+                <div class="text-right font-medium text-sm" id="receiver"></div>
+            </div>
+            <div class="border-b border-gray-200 py-2 grid grid-cols-2">
+                <div class="text-gray-600 text-sm">Recipient Account</div>
+                <div class="text-right font-medium text-xs" id="receiverAccount"></div>
+            </div>
+            <div class="border-b border-gray-200 py-2 grid grid-cols-2">
+                <div class="text-gray-600 text-sm">Recipient Bank</div>
+                <div class="text-right font-medium text-sm" id="receiverBank"></div>
+            </div>
+
+            <!-- Cost Information -->
+            <h3 class="font-bold text-base mt-4 mb-2">Your total transfer cost</h3>
+            <div class="border-b border-gray-200 py-2 grid grid-cols-2">
+                <div class="text-gray-600 text-sm">Transfer amount</div>
+                <div class="text-right">
+                    <div class="font-medium text-sm" id="amount"></div>
+                    <div class="text-xxs text-gray-500">From My Checking</div>
+                </div>
+            </div>
+            <div class="border-b border-gray-200 py-2 grid grid-cols-2">
+                <div class="text-gray-600 text-sm">Transfer fees</div>
+                <div class="text-right font-medium text-sm" id="processingFee"></div>
+            </div>
+            <div class="py-2 grid grid-cols-2">
+                <div class="text-gray-600 text-sm">Total cost</div>
+                <div class="text-right font-bold text-sm" id="totalCost"></div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="mt-4 flex justify-center">
+                <button id="doneButton" onclick="markAsDone()" class="w-14 h-14 bg-boa-green rounded-full flex items-center justify-center text-white font-bold text-xs">
+                    DONE
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get data from localStorage
+        const sender = localStorage.getItem('sender') || 'John Doe';
+        const senderAccount = localStorage.getItem('senderAccount') || '1234567890';
+        const receiver = localStorage.getItem('receiver') || 'Robin Brown';
+        const receiverAccount = localStorage.getItem('receiverAccount') || '0987654321';
+        const receiverBank = localStorage.getItem('receiverBank') || 'Chase Bank';
+        const amount = localStorage.getItem('amount') || '20,000.00';
+        const processingFee = localStorage.getItem('processingFee') || '30.00';
+        const confirmationNumber = localStorage.getItem('confirmationNumber') || 'XXXXXXXXXX';
+        const transactionDate = localStorage.getItem('transactionDate') 
+            ? new Date(localStorage.getItem('transactionDate')) 
+            : new Date();
+        
+        // Calculate total
+        const amountNum = parseFloat(amount.replace(/,/g, '')) || 0;
+        const feeNum = parseFloat(processingFee) || 0;
+        const totalNum = amountNum + feeNum;
+        const totalFormatted = totalNum.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
+        // Format date and time
+        const formatDateTime = (date) => {
+            return date.toLocaleString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        };
+        
+        // Populate the receipt
+        document.getElementById('dateTime').textContent = formatDateTime(transactionDate);
+        document.getElementById('confirmationNumber').textContent = confirmationNumber;
+        document.getElementById('sender').textContent = sender;
+        document.getElementById('senderAccount').textContent = maskAccountNumber(senderAccount);
+        document.getElementById('receiver').textContent = receiver;
+        document.getElementById('receiverAccount').textContent = maskAccountNumber(receiverAccount);
+        document.getElementById('receiverBank').textContent = receiverBank;
+        document.getElementById('amount').textContent = `$${amount} USD`;
+        document.getElementById('processingFee').textContent = `+ $${processingFee} USD`;
+        document.getElementById('totalCost').textContent = `$${totalFormatted} USD`;
+        
+        // Function to mask account number (show only last 4 digits)
+        function maskAccountNumber(accountNumber) {
+            if (!accountNumber) return '';
+            const lastFour = accountNumber.slice(-4);
+            const masked = 'XXXX-XXXX-' + lastFour;
+            return masked;
+        }
+        
+        // Function to mark as done
+        function markAsDone() {
+            window.print();
+            // Optional: redirect back to index page after printing
+            // setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+        }
+    </script>
+</body>
+</html>
+
